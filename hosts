@@ -1,0 +1,2 @@
+[test]
+192.168.1.122  ansible_user=user1 ansible_ssh_pass='pass.2020' ansible_sudo_pass='pass.2020'

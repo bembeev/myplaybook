@@ -1,0 +1,35 @@
+- name: installation and configuration openvpn-client
+  hosts: test
+  become: yes
+  become_method: sudo
+  become_user: root
+
+  vars:
+      base: "/etc/openvpn/files/base.conf"
+      cacrt: "/etc/openvpn/files/ca.crt"
+      clientcrt: "/etc/openvpn/files/client1.crt"
+      clientkey: "/etc/openvpn/files/client1.key" 
+      takey:    "/etc/openvpn/files/ta.key"  
+
+
+  tasks:
+     - name: install openvpn     
+       apt: name=openvpn update_cache=yes
+
+     - name: copy config files
+       copy: src=files  dest=/etc/openvpn/
+ 
+     - name: copy generating script
+       copy: 
+         src: scripts/make_config.sh 
+         dest: /usr/local/bin/  
+         mode: a+x
+
+     - shell: /usr/local/bin/make_config.sh  "{{ base }}" "{{ cacrt }}" "{{ clientcrt }}" "{{ clientkey }}" "{{ takey }}"
+
+     - shell: openvpn --config /etc/openvpn/client.ovpn &
+    
+
+   
+
+       
